@@ -1,0 +1,3 @@
+REM WinZipLog [START_DATE] [END_DATE] [PATH_ZIP_FILE] [PATH_FILES_TO_ZIP]
+Call WinZipLog 20140301 20140307 . C:\Developpement\IISLOG
+pause
