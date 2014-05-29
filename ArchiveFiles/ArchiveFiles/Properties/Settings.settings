@@ -1,0 +1,15 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="ArchiveFiles.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="ArchiveExePath" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">C:\_Dropbox\My Programs\7-Zip\7z.exe</Value>
+    </Setting>
+    <Setting Name="ArchiveFileExtension" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">.zip</Value>
+    </Setting>
+    <Setting Name="FilterMask" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">*.log</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
