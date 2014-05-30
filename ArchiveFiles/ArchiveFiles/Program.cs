@@ -107,9 +107,9 @@ namespace ArchiveFiles
 
                     startDate = endDate.AddDays(Convert.ToInt64(nbDays));
                 }
-
+                
                 string archiveFileName = startDate.ToString(dateFormat) + "-" + endDate.ToString(dateFormat) + _archiveExt;
-                _ouputFile = args[3] + ((args[3].EndsWith("\\")) ? "" : "\\") + archiveFileName;
+                _ouputFile = Path.Combine(args[3], archiveFileName);
 
                 //Filtre pour les fichier rpt dans le répertoire et les sous-répertoires
                 DirectoryInfo rootDir = new DirectoryInfo(_scanPath);
