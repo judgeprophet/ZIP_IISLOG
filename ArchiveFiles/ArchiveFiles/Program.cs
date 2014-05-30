@@ -7,6 +7,9 @@ namespace ArchiveFiles
 {
     //TODO Refactor to try to put all the Validation in the same place,  For Now Validation is All over the place
     //TODO Validate is all the settings are present in the app.config
+    //TODO Add Format Date to app.config
+    //TOOO Add a setting in app.config for Prefix and/or Suffize of the Zip file
+    //TODO Add Flag for a better handling of the console output, for those who want to log the output
     class Program
     {
         static string _archiveExt = Properties.Settings.Default.ArchiveFileExtension;
