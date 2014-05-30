@@ -66,12 +66,12 @@ namespace ArchiveFiles
 
                 if (!Directory.Exists(args[3]))
                 {
-                    throw new System.IO.DirectoryNotFoundException(Resource1.ERR_NO_DEST_PATH);
+                    throw new System.IO.DirectoryNotFoundException(Resource1.ERR_NO_DEST_PATH + " " +  args[3]);
                 }
 
                 if (!Directory.Exists(args[4]))
                 {
-                    throw new System.IO.DirectoryNotFoundException(Resource1.ERR_NO_SOURCE_PATH);
+                    throw new System.IO.DirectoryNotFoundException(Resource1.ERR_NO_SOURCE_PATH + " " + args[4]);
                 }
 
                 #endregion
