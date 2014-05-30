@@ -1,22 +1,37 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
-using System.Text;
 
 namespace ArchiveFiles
 {
+    //TODO Refactor to try to put all the Validation in the same place,  For Now Validation is All over the place
+    //TODO Validate is all the settings are present in the app.config
     class Program
     {
         static string _archiveExt = Properties.Settings.Default.ArchiveFileExtension;
         static string _filterMask = Properties.Settings.Default.FilterMask;
         static string _archiveExePath = Properties.Settings.Default.ArchiveExePath;
+        static string _archiveExeOption = Properties.Settings.Default.ArchiveExeOption;
 
         static string _scanPath; //Repertoire de recherche
         static string _ouputFile; // Repertoire ou sera créé
         static string _optionFlag; // Type de recherche
         static string _startDate; // Date de début
         static string _endDate; // Date de fin
+
+        const string dateFormat = "ddMMyyyy";
+
+        //All Possible Flag accepted on the command line
+        public enum optionFlags
+        {
+            [Description("R")]
+            Range,
+            [Description("D")]
+            Days,
+            [Description("NOW")]
+            TodayDate
+        };
 
         /// <summary>
         /// 
@@ -33,10 +48,15 @@ namespace ArchiveFiles
                 //Parametre sur la ligne de commande est obligatoire
                 if (args.Length < 5)
                 {
-                    throw new ArgumentException(Resource1.ERR_ARG);
+                    throw new ArgumentException(Resource1.ERR_ARG_EXPECTED);
                 }
 
-                if (args[0].ToUpper() != "D" && args[0].ToUpper() != "R")
+                if (!File.Exists(_archiveExePath))
+                {
+                    throw new ArgumentException(Resource1.ERR_ZIPEXE_NOT_EXISTS);
+                }
+
+                if (args[0].ToUpper() != optionFlags.Days.GetDescription() && args[0].ToUpper() != optionFlags.Range.GetDescription()) //Invariant Case
                 {
                     throw new Exception(Resource1.ERR_WRONG_OPTION_FLAG);
                 }
@@ -58,24 +78,35 @@ namespace ArchiveFiles
                 _endDate = args[2];
                 _scanPath = args[4];
 
-                DateTime endDate = Convert.ToDateTime(_endDate.Substring(0, 2) + "-" + _endDate.Substring(2, 2) + "-" + _endDate.Substring(4, 4));
+                DateTime endDate = DateTime.Now;
                 DateTime startDate = DateTime.Now;
-                if (_optionFlag.ToUpper() == "R")
+
+                //Validate and Set Date in the proper expected Format, If the keyword NOW is entered.  We use Today's Date
+                if (_endDate.ToUpper() != optionFlags.TodayDate.GetDescription() && !DateTime.TryParseExact(_endDate, dateFormat, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out endDate))
+                    throw new ArgumentException(Resource1.ERR_WRONG_DATE_FORMAT);
+
+                if (_optionFlag.ToUpper() == optionFlags.Range.GetDescription()) //Invariant Case
                 {
-                    startDate = Convert.ToDateTime(_startDate.Substring(0, 2) + "-" + _startDate.Substring(2, 2) + "-" + _startDate.Substring(4, 4));
+                    //=======================================================================================
+                    //using the RANGE command line option.  Looking for file between two date
 
+                    //Validate and Set Date in the proper expected Format, If the keyword NOW is entered.  We use Today's Date
+                    if (_startDate.ToUpper() != optionFlags.TodayDate.GetDescription() && !DateTime.TryParseExact(_startDate, dateFormat, System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out startDate))
+                        throw new ArgumentException(Resource1.ERR_WRONG_DATE_FORMAT);
                 }
-                if (_optionFlag.ToUpper() == "D")
+                else if (_optionFlag.ToUpper() == optionFlags.Days.GetDescription()) //Invariant Case
                 {
-                    startDate = endDate.AddDays(Convert.ToInt64(_startDate));
+                    //=======================================================================================
+                    //using the DAY command line option.  Looking for file older or newer than a specified date
+                    long nbDays;
+                    if (!long.TryParse(_startDate, out nbDays))
+                        throw new ArgumentException(Resource1.ERR_NB_DAYS_INTEGER);
+
+                    startDate = endDate.AddDays(Convert.ToInt64(nbDays));
                 }
 
-
-
-                string archiveFileName = startDate.ToString("ddMMyyyy") + "-" + endDate.ToString("ddMMyyyy") + _archiveExt;
+                string archiveFileName = startDate.ToString(dateFormat) + "-" + endDate.ToString(dateFormat) + _archiveExt;
                 _ouputFile = args[3] + ((args[3].EndsWith("\\")) ? "" : "\\") + archiveFileName;
-
-                //_scanPath = @"C:\Developpement\IISLOG\";
 
                 //Filtre pour les fichier rpt dans le répertoire et les sous-répertoires
                 DirectoryInfo rootDir = new DirectoryInfo(_scanPath);
@@ -87,17 +118,32 @@ namespace ArchiveFiles
                     liftFilesToZip += file.FullName + " ";
                 }
 
-                string strCmdText = " a -mx1 " + _ouputFile + " " + liftFilesToZip;
+                if (String.IsNullOrEmpty(liftFilesToZip))
+                {
+                    Console.WriteLine(Resource1.NO_FILES_TO_ARCHIVE);
+                }
+                else
+                {
+                    string strCmdText = " " + _archiveExeOption + " " + _ouputFile + " " + liftFilesToZip;
 
-                string _Output = null;
-                string _Error = null;
-                ExecuteShell.ExecuteShellCommand(_archiveExePath, strCmdText, ref _Output, ref _Error);
+                    string _Output = null;
+                    string _Error = null;
+                    ExecuteShell.ExecuteShellCommand(_archiveExePath, strCmdText, ref _Output, ref _Error);
+                    Console.WriteLine(_archiveExePath + " " + strCmdText);
+
+                    if (!String.IsNullOrEmpty(_Error))
+                    {
+                        throw new Exception(_Error);
+                    }
+
+                    Console.WriteLine(_Output);
+                }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine("ArchiveFiles.exe [d NB_OF_DAYS]|[r START_DATE] [END_DATE] [PATH_ZIP_FILE] [PATH_FILES_TO_ZIP]");
-                Console.WriteLine("[START_DATE] [END_DATE] Must be in format DDMMYYYY");
+                Console.WriteLine("[START_DATE] [END_DATE] Must be in format DDMMYYYY OR use the 'now' keyword if you want to use today's date");
                 Console.WriteLine();
                 Console.WriteLine(@"The First Parameter [d|r]  stand for d=days OR r=range.");
                 Console.WriteLine(@"If 'd' is specified the next parameter must be how much days to Add or Substract from the [END_DATE] parameter");
@@ -108,9 +154,12 @@ namespace ArchiveFiles
                 Console.WriteLine();
                 Console.WriteLine(@"EX: ArchiveFiles d -7 01052014 C:\Archives\ C:\IISLOG\");
                 Console.WriteLine(@"Create a archive in folder 'C:\Archive' with log located in 'C:\IISLOG\' modified between Mai 1st 2014 and seven days before that");
+                Console.WriteLine();
+                Console.WriteLine(@"EX: ArchiveFiles r 01052014 now C:\Archives\ C:\IISLOG\");
+                Console.WriteLine(@"Create a archive in folder 'C:\Archive' with log located in 'C:\IISLOG\' modified between Mai 1st 2014 and today");
                 Console.WriteLine("");
                 Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                Console.WriteLine("ERREUR : " + ex.Message);
+                Console.WriteLine("ERROR : " + ex.Message);
                 Console.WriteLine("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                 Console.WriteLine("");
             }

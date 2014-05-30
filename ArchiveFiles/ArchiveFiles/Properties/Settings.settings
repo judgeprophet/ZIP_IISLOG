@@ -11,5 +11,8 @@
     <Setting Name="FilterMask" Type="System.String" Scope="Application">
       <Value Profile="(Default)">*.log</Value>
     </Setting>
+    <Setting Name="ArchiveExeOption" Type="System.String" Scope="Application">
+      <Value Profile="(Default)">a -mx1</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

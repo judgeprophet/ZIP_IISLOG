@@ -63,9 +63,18 @@ namespace ArchiveFiles {
         /// <summary>
         ///   Looks up a localized string similar to Parameters expected are [d NB_OF_DAYS]|[r START_DATE] [END_DATE] [PATH_ZIP_FILE] [PATH_FILES_TO_ZIP].
         /// </summary>
-        internal static string ERR_ARG {
+        internal static string ERR_ARG_EXPECTED {
             get {
-                return ResourceManager.GetString("ERR_ARG", resourceCulture);
+                return ResourceManager.GetString("ERR_ARG_EXPECTED", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to When the &apos;d&apos; parameter is specified the next argument must be an integer.
+        /// </summary>
+        internal static string ERR_NB_DAYS_INTEGER {
+            get {
+                return ResourceManager.GetString("ERR_NB_DAYS_INTEGER", resourceCulture);
             }
         }
         
@@ -88,11 +97,38 @@ namespace ArchiveFiles {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to [START_DATE] and/or [END_DATE] Must be in &apos;DDMMYYYY&apos; format OR use the &apos;now&apos; keyword if you want to use today&apos;s date.
+        /// </summary>
+        internal static string ERR_WRONG_DATE_FORMAT {
+            get {
+                return ResourceManager.GetString("ERR_WRONG_DATE_FORMAT", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to d[ays] or r[ange] are the accepted parameters.
         /// </summary>
         internal static string ERR_WRONG_OPTION_FLAG {
             get {
                 return ResourceManager.GetString("ERR_WRONG_OPTION_FLAG", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to The path and/or command to the archive &apos;exe&apos; does not exists.
+        /// </summary>
+        internal static string ERR_ZIPEXE_NOT_EXISTS {
+            get {
+                return ResourceManager.GetString("ERR_ZIPEXE_NOT_EXISTS", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No files were found to archive.
+        /// </summary>
+        internal static string NO_FILES_TO_ARCHIVE {
+            get {
+                return ResourceManager.GetString("NO_FILES_TO_ARCHIVE", resourceCulture);
             }
         }
     }

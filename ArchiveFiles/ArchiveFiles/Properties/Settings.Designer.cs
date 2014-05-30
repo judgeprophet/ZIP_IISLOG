@@ -49,5 +49,14 @@ namespace ArchiveFiles.Properties {
                 return ((string)(this["FilterMask"]));
             }
         }
+        
+        [global::System.Configuration.ApplicationScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("a -mx1")]
+        public string ArchiveExeOption {
+            get {
+                return ((string)(this["ArchiveExeOption"]));
+            }
+        }
     }
 }

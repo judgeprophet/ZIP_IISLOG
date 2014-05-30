@@ -117,8 +117,11 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="ERR_ARG" xml:space="preserve">
+  <data name="ERR_ARG_EXPECTED" xml:space="preserve">
     <value>Parameters expected are [d NB_OF_DAYS]|[r START_DATE] [END_DATE] [PATH_ZIP_FILE] [PATH_FILES_TO_ZIP]</value>
+  </data>
+  <data name="ERR_NB_DAYS_INTEGER" xml:space="preserve">
+    <value>When the 'd' parameter is specified the next argument must be an integer</value>
   </data>
   <data name="ERR_NO_DEST_PATH" xml:space="preserve">
     <value>The destination folder does not exist</value>
@@ -126,7 +129,16 @@
   <data name="ERR_NO_SOURCE_PATH" xml:space="preserve">
     <value>The archive folder to scan does not exist</value>
   </data>
+  <data name="ERR_WRONG_DATE_FORMAT" xml:space="preserve">
+    <value>[START_DATE] and/or [END_DATE] Must be in 'DDMMYYYY' format OR use the 'now' keyword if you want to use today's date</value>
+  </data>
   <data name="ERR_WRONG_OPTION_FLAG" xml:space="preserve">
     <value>d[ays] or r[ange] are the accepted parameters</value>
+  </data>
+  <data name="ERR_ZIPEXE_NOT_EXISTS" xml:space="preserve">
+    <value>The path and/or command to the archive 'exe' does not exists</value>
+  </data>
+  <data name="NO_FILES_TO_ARCHIVE" xml:space="preserve">
+    <value>No files were found to archive</value>
   </data>
 </root>

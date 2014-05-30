@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.ComponentModel;
 
 namespace ArchiveFiles
@@ -46,7 +44,7 @@ namespace ArchiveFiles
 
                 // pass executing file to cmd (Windows command interpreter) as a arguments
                 // /C tells cmd that we want it to execute the command that follows, and then exit.
-                string _Arguments = string.Format(System.Globalization.CultureInfo.InvariantCulture, "/C {0}", new object[] { _FileToExecute });
+                string _Arguments = string.Format(System.Globalization.CultureInfo.InvariantCulture, "/C \"{0}\"", new object[] { _FileToExecute });
 
                 // pass any command line parameters for execution
                 if (_CommandLine != null && _CommandLine.Length > 0)
